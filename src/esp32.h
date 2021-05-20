@@ -66,8 +66,8 @@
  
   #define PIN_ETHER_CS         255 // ENC28J60 CS (chip select pin) is 16 on OS 3.2.
 
-  #define ON_BOARD_GPIN_LIST     {12,13,14,15, 16,17,18,19} //  ESP32 on board gpins to be usead as sections, 255 - pin not defined
-  #define ON_BOARD_GPIN_LIST_2   {21,22,25,26, 27,32,33,255} //  ESP32 on board gpins to be usead as sections, 255 - pin not defined
+  #define ON_BOARD_GPIN_LIST     {27,13,32,33, 16,17,18,19} //  ESP32 on board gpins to be usead as sections, 255 - pin not defined
+  #define ON_BOARD_GPIN_LIST_2   {21,22,25,26, 255,255,255,255} //  ESP32 on board gpins to be usead as sections, 255 - pin not defined
   #define PIN_FREE_LIST     {} // no free GPIO pin at the moment
 
   #define PIN_CURR_SENSE      39
