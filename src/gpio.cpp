@@ -129,10 +129,23 @@ void BUILD_IN_GPIO::set_pins_output_mode (){
 void BUILD_IN_GPIO::i2c_write(uint16_t v){
   v = (uint8_t)(v&0xFF) | inputmask;
   int i;
-  for (i=0; i<8; i++)
+  for (i=0; i<8; i++) {
     if ( on_board_gpin_list[i] != 255){
+		DEBUG_PRINT("GPIO: ");
+		DEBUG_PRINT(i);
+		DEBUG_PRINT(" pin: ");
+		DEBUG_PRINT(on_board_gpin_list[i]);
+		DEBUG_PRINT(" value: ");
+		DEBUG_PRINT(((v)>>(i)) & 1); 
+		DEBUG_PRINT(";");
       digitalWriteExt( on_board_gpin_list[i], ((v)>>(i)) & 1);
-    }
+    } 
+  }
+  DEBUG_PRINTLN("");
+}
+
+void BUILD_IN_GPIO::i2c_write(uint8_t reg, uint16_t v) {
+	this->i2c_write(v);
 }
 
 

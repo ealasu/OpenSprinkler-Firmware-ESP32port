@@ -800,7 +800,11 @@ void OpenSprinkler::begin() {
   for(byte i=0;i<(MAX_NUM_BOARDS)/2;i++)
     expanders[i] = NULL;
   DEBUG_PRINTLN("Starting to detect expanders");
-  detect_expanders();
+  //detect_expanders();
+  
+  uint8_t on_board_pins2[8] = ON_BOARD_GPIN_LIST_2;
+  expanders[0] = new BUILD_IN_GPIO(on_board_pins2);
+  expanders[0]->set_pins_output_mode();
  
  
  DEBUG_PRINT("hw_type = "); DEBUG_PRINT(hw_type); DEBUG_PRINT(" hw_rev = "); DEBUG_PRINTLN(hw_rev);
@@ -1122,13 +1126,26 @@ void OpenSprinkler::apply_all_station_bits() {
 
 #endif     
 		// Handle expansion boards
+		//DEBUG_PRINTLN("handling expansion boards");
 		for(int i=0;i<MAX_EXT_BOARDS/2;i++) {
-			uint16_t data = station_bits[i*2+2];
-			data = (data<<8) + station_bits[i*2+1];
-			if(expanders[i]->type==IOEXP_TYPE_9555) {
-				expanders[i]->i2c_write(NXP_OUTPUT_REG, data);
-			} else {
-				expanders[i]->i2c_write(NXP_OUTPUT_REG, ~data);
+			if (expanders[i] != NULL) {
+				uint16_t data = station_bits[i*2+2];
+				data = (data<<8) + station_bits[i*2+1];
+				DEBUG_PRINT("in expansion board: ");
+				DEBUG_PRINT(i);
+				DEBUG_PRINT(" type: ");
+				DEBUG_PRINT(expanders[i]->type);
+				DEBUG_PRINT(" data: ");
+				DEBUG_PRINT(data);
+				DEBUG_PRINT(" bits[2]: ");
+				DEBUG_PRINTLN(station_bits[2]);
+				if(expanders[i]->type==IOEXP_TYPE_9555) {
+					expanders[i]->i2c_write(NXP_OUTPUT_REG, data);
+				} else {
+					DEBUG_PRINT("expansion board writing: ");
+					DEBUG_PRINTLN(data);
+					expanders[i]->i2c_write(NXP_OUTPUT_REG, data);
+				}
 			}
 		}
 	}
@@ -1518,6 +1535,8 @@ byte OpenSprinkler::weekday_today() {
 void OpenSprinkler::switch_special_station(byte sid, byte value) {
 	// check if this is a special station
 	byte stype = get_station_type(sid);
+	DEBUG_PRINT("Special station: ")
+	DEBUG_PRINTLN(stype)
 	if(stype!=STN_TYPE_STANDARD) {
 		// read station data
 		StationData *pdata=(StationData*) tmp_buffer;
@@ -1550,13 +1569,17 @@ void OpenSprinkler::switch_special_station(byte sid, byte value) {
  */
 byte OpenSprinkler::set_station_bit(byte sid, byte value) {
 
-//  DEBUG_PRINT("Setting SID: "); DEBUG_PRINT(sid); DEBUG_PRINT(" Value: "); DEBUG_PRINTLN(value);
+  DEBUG_PRINT("Setting SID: "); DEBUG_PRINT(sid); DEBUG_PRINT(" Value: "); DEBUG_PRINTLN(value);
   
 	byte *data = station_bits+(sid>>3);  // pointer to the station byte
 	byte mask = (byte)1<<(sid&0x07); // mask
 	if (value) {
-		if((*data)&mask) return 0;	// if bit is already set, return no change
+		if((*data)&mask) {
+			DEBUG_PRINTLN("already set");
+			return 0;	// if bit is already set, return no change
+		}
 		else {
+			DEBUG_PRINTLN("setting");
 			(*data) = (*data) | mask;
 			engage_booster = true; // if bit is changing from 0 to 1, set engage_booster
 			switch_special_station(sid, 1); // handle special stations

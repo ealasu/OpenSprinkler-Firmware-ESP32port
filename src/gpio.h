@@ -141,6 +141,7 @@ public:
   uint16_t i2c_read(uint8_t reg);*/
   void set_pins_output_mode () ;
   void i2c_write( uint16_t v);
+  void i2c_write(uint8_t reg, uint16_t v);
 private:
   uint8_t inputmask = 0;  // mask bits for input pins
   uint8_t on_board_gpin_list[8] = {255,255,255,255,255,255,255,255}; // list of gpins 
