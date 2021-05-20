@@ -791,9 +791,9 @@ void OpenSprinkler::begin() {
   drio = new BUILD_IN_GPIO(on_board_pins1); // to handle gpio's on ESP32 board
   drio->set_pins_output_mode () ;
     
-  pinModeExt(PIN_BUTTON_1, INPUT_PULLUP);
-  pinModeExt(PIN_BUTTON_2, INPUT_PULLUP);
-  pinModeExt(PIN_BUTTON_3, INPUT_PULLUP);
+  //pinModeExt(PIN_BUTTON_1, INPUT_PULLUP);
+  //pinModeExt(PIN_BUTTON_2, INPUT_PULLUP);
+  //pinModeExt(PIN_BUTTON_3, INPUT_PULLUP);
   
   
   /* detect expanders */
@@ -962,16 +962,18 @@ void OpenSprinkler::begin() {
 		
 	// set button pins
 	// enable internal pullup
-	pinMode(PIN_BUTTON_1, INPUT_PULLUP);
-	pinMode(PIN_BUTTON_2, INPUT_PULLUP);
-	pinMode(PIN_BUTTON_3, INPUT_PULLUP);
+	//pinMode(PIN_BUTTON_1, INPUT_PULLUP);
+	//pinMode(PIN_BUTTON_2, INPUT_PULLUP);
+	//pinMode(PIN_BUTTON_3, INPUT_PULLUP);
 	
 	// detect and check RTC type
-	RTC.detect();
+	//RTC.detect();
 
 #else
 	DEBUG_PRINTLN(get_runtime_path());
 #endif
+
+    DEBUG_PRINTLN("Finished OpenSprinkler::begin");
 }
 
 #if defined(ESP8266) || defined(ESP32)
@@ -1909,6 +1911,7 @@ void OpenSprinkler::switch_httpstation(HTTPStationData *data, bool turnon) {
 
 /** Setup function for options */
 void OpenSprinkler::options_setup() {
+	DEBUG_PRINTLN("start OpenSprinkler::options_setup");
 
 	// Check reset conditions:
 	if (file_read_byte(IOPTS_FILENAME, IOPT_FW_VERSION)<219 ||	// fw version is invalid (<219)
@@ -2102,6 +2105,8 @@ void OpenSprinkler::options_setup() {
 		#endif
 	}
 #endif
+
+	DEBUG_PRINTLN("finish OpenSprinkler::options_setup");
 }
 
 /** Load non-volatile controller status data from file */
@@ -2211,6 +2216,8 @@ void OpenSprinkler::lcd_print_line_clear_pgm(PGM_P str, byte line) {
 #else
 void OpenSprinkler::lcd_print_line_clear_pgm(PGM_P PROGMEM str, byte line) {
 #endif
+	DEBUG_PRINTLN(str);
+	return;
 	lcd.setCursor(0, line);
 	uint8_t c;
 	int8_t cnt = 0;
@@ -2493,13 +2500,13 @@ byte OpenSprinkler::button_read(byte waitmode)
 
 	delay(BUTTON_DELAY_MS);
 
-	if (digitalReadExt(PIN_BUTTON_1) == 0) {
-		curr = button_read_busy(PIN_BUTTON_1, waitmode, BUTTON_1, is_holding);
-	} else if (digitalReadExt(PIN_BUTTON_2) == 0) {
-		curr = button_read_busy(PIN_BUTTON_2, waitmode, BUTTON_2, is_holding);
-	} else if (digitalReadExt(PIN_BUTTON_3) == 0) {
-		curr = button_read_busy(PIN_BUTTON_3, waitmode, BUTTON_3, is_holding);
-	}
+	//if (digitalReadExt(PIN_BUTTON_1) == 0) {
+	//	curr = button_read_busy(PIN_BUTTON_1, waitmode, BUTTON_1, is_holding);
+	//} else if (digitalReadExt(PIN_BUTTON_2) == 0) {
+	//	curr = button_read_busy(PIN_BUTTON_2, waitmode, BUTTON_2, is_holding);
+	//} else if (digitalReadExt(PIN_BUTTON_3) == 0) {
+	//	curr = button_read_busy(PIN_BUTTON_3, waitmode, BUTTON_3, is_holding);
+	//}
 
 	// set flags in return value
 	byte ret = curr;

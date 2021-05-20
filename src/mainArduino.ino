@@ -29,8 +29,15 @@ void setup() {
   unsigned int pin_list[] = ON_BOARD_GPIN_LIST;
   for( i=0; i<8; i++ ){
     if(pin_list[i] !=255){
-      pinMode(pin_list[i], OUTPUT);
       digitalWrite(pin_list[i], ~STATION_LOGIC);
+      pinMode(pin_list[i], OUTPUT);
+    }
+  }
+  unsigned int pin_list_2[] = ON_BOARD_GPIN_LIST_2;
+  for( i=0; i<8; i++ ){
+    if(pin_list_2[i] !=255){
+      digitalWrite(pin_list_2[i], ~STATION_LOGIC);
+      pinMode(pin_list_2[i], OUTPUT);
     }
   }
 

@@ -132,6 +132,7 @@ bool ui_confirm(PGM_P str) {
 }
 
 void ui_state_machine() {
+	return;
  
 #if defined(ESP8266) || defined(ESP32)
 	// process screen led
@@ -303,7 +304,7 @@ void do_setup() {
 
 	setSyncInterval(RTC_SYNC_INTERVAL);  // RTC sync interval
 	// if rtc exists, sets it as time sync source
-	setSyncProvider(RTC.get);
+	//setSyncProvider(RTC.get);
 	os.lcd_print_time(os.now_tz());  // display time to LCD
 	os.powerup_lasttime = os.now_tz();
 	
@@ -318,6 +319,7 @@ void do_setup() {
 	/* Enable the WD interrupt (note no reset). */
 	WDTCSR |= _BV(WDIE);
 #endif
+	DEBUG_PRINTLN("Starting network");
 	if (os.start_network()) {  // initialize network
 		os.status.network_fails = 0;
 	} else {
@@ -329,6 +331,7 @@ void do_setup() {
 	os.apply_all_station_bits(); // reset station bits
 
 	os.button_timeout = LCD_BACKLIGHT_TIMEOUT;
+	DEBUG_PRINTLN("Finished do_setup");
 }
 
 // Arduino software reset function
