@@ -131,7 +131,10 @@ private:
 
 class BUILD_IN_GPIO : public IOEXP {
 public:
-  BUILD_IN_GPIO() { type = IOEXP_TYPE_BUILD_IN_GPIO; }
+  BUILD_IN_GPIO(uint8_t pins[8]) {
+	  type = IOEXP_TYPE_BUILD_IN_GPIO;
+	  std::copy(pins, pins + 8, on_board_gpin_list);
+	}
 /*  void pinMode(uint8_t pin, uint8_t IOMode) { 
     if(IOMode!=OUTPUT) inputmask |= (1<<pin);
   }
@@ -140,7 +143,7 @@ public:
   void i2c_write( uint16_t v);
 private:
   uint8_t inputmask = 0;  // mask bits for input pins
-  uint8_t on_board_gpin_list[8] = ON_BOARD_GPIN_LIST; // list of gpins 
+  uint8_t on_board_gpin_list[8] = {255,255,255,255,255,255,255,255}; // list of gpins 
 };
 #endif
 

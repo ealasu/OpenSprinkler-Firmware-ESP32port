@@ -787,7 +787,8 @@ void OpenSprinkler::begin() {
  #endif
  
   // mainio = new IOEXP(ACDR_I2CADDR); // dont need this as all is handled by ESP32 gpio's
-  drio = new BUILD_IN_GPIO(); // to handle gpio's on ESP32 board
+  uint8_t on_board_pins1[8] = ON_BOARD_GPIN_LIST;
+  drio = new BUILD_IN_GPIO(on_board_pins1); // to handle gpio's on ESP32 board
   drio->set_pins_output_mode () ;
     
   pinModeExt(PIN_BUTTON_1, INPUT_PULLUP);
